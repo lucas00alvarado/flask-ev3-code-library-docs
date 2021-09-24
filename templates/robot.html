@@ -15,10 +15,6 @@
 <link href="search.html" rel="search" title="Search"/>
 <link href="genindex.html" rel="index" title="Index"/>
 <link href="quickstart.html" rel="prev" title="Quickstart"/>
-<link rel="apple-touch-icon" sizes="180x180" href="static/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="static/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="static/favicon-16x16.png">
-<link rel="manifest" href="static/site.webmanifest">
 </head><body class="text-gray-900 antialiased">
 <div class="h-screen md:grid md:grid-layout" id="page">
 <a class="block text-xl bg-white px-8 py-4 z-20 absolute top-0 inset-x-0 text-center transform -translate-y-full focus:translate-y-0 focus:outline-none transition-transform duration-75" href="#robot" title="Skip navigation links">Skip to content</a>
@@ -76,7 +72,7 @@
 <span class="code-lang">python</span>
 <button aria-label="Copy this code" class="copy tooltipped tooltipped-nw"><svg aria-hidden="true" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/xvg"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg></button>
 </div>
-<pre><code><span class="fm">__init__</span><span class="p">(</span><span class="n">left_motor_port</span><span class="p">,</span> <span class="n">right_motor_port</span><span class="p">,</span> <span class="n">left_sensor_port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">right_sensor_port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">back_sensor_port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gyro_sensor_port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">motor1_port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">motor2_port</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<pre><code><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left_motor_port</span><span class="p">,</span> <span class="n">right_motor_port</span><span class="p">,</span> <span class="n">wheel_diameter</span><span class="p">,</span> <span class="n">wheel_width</span><span class="p">,</span> <span class="n">left_sensor_port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">right_sensor_port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">back_sensor_port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gyro_sensor_port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">motor1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">motor2</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 <p>A class that contains all of the functions that the ev3 should need to use. It has functionality for line followers,
 gyro sensor programs, driving, and more. Also contains all of the sensor and motor objects so that all of it only needs
@@ -90,6 +86,12 @@ you have passed in the ports for all of the sensors and motors.</p>
 <dt class="field-even">right_motor_port</dt>
 <dd class="field-even"><p>port for the right driving motor. Values: OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D</p>
 </dd>
+<dt class="field-odd">wheel_diameter</dt>
+<dd class="field-odd"><p>the diameter of the wheels in millimeters</p>
+</dd>
+<dt class="field-even">wheel_width</dt>
+<dd class="field-even"><p>the width of the wheels in millimeters</p>
+</dd>
 <dt class="field-odd">left_sensor_port</dt>
 <dd class="field-odd"><p>port for the left color sensor. Values: INPUT_1, INPUT_2, INPUT_3, INPUT_4</p>
 </dd>
@@ -102,11 +104,11 @@ you have passed in the ports for all of the sensors and motors.</p>
 <dt class="field-even">gyro_sensor_port</dt>
 <dd class="field-even"><p>port for the gyro sensor. Values: INPUT_1, INPUT_2, INPUT_3, INPUT_4</p>
 </dd>
-<dt class="field-odd">motor1_port</dt>
-<dd class="field-odd"><p>port for one of the attachment motors. Values: OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D</p>
+<dt class="field-odd">motor1</dt>
+<dd class="field-odd"><p>LargeMotor or MediumMotor object for one of the attachment motors.</p>
 </dd>
-<dt class="field-even">motor2_port</dt>
-<dd class="field-even"><p>port for one of the attachment motors. Values: OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D</p>
+<dt class="field-even">motor2</dt>
+<dd class="field-even"><p>LargeMotor or MediumMotor object for one of the attachment motors.</p>
 </dd>
 </dl>
 </div></blockquote>
@@ -120,8 +122,7 @@ you have passed in the ports for all of the sensors and motors.</p>
 </div>
 <pre><code><span class="n">follow_until_black</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color_sensor</span><span class="p">:</span> <span class="n">ColorSensor</span><span class="p">,</span> <span class="n">stop_sensor</span><span class="p">:</span> <span class="n">ColorSensor</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="n">rli</span><span class="p">,</span> <span class="n">kp</span><span class="p">,</span> <span class="n">ki</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">kd</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </code></pre></div>
-<p>Allows you to follow a line until the other color sensor hits black.
-You have to use negative PID values if you are line following on the left side of a line</p>
+<p>Allows you to follow a line until the other color sensor hits black. You have to use negative PID values if you are line following on the left side of a line</p>
 <blockquote>
 <div><dl class="field-list simple">
 <dt class="field-odd">color_sensor</dt>
@@ -157,8 +158,7 @@ You have to use negative PID values if you are line following on the left side o
 </div>
 <pre><code><span class="n">follow_until_white</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color_sensor</span><span class="p">:</span> <span class="n">ColorSensor</span><span class="p">,</span> <span class="n">stop_sensor</span><span class="p">:</span> <span class="n">ColorSensor</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="n">rli</span><span class="p">,</span> <span class="n">kp</span><span class="p">,</span> <span class="n">ki</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">kd</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </code></pre></div>
-<p>Allows you to follow a line until the other color sensor hits white.
-You have to use negative PID values if you are line following on the left side of a line</p>
+<p>Allows you to follow a line until the other color sensor hits white. You have to use negative PID values if you are line following on the left side of a line</p>
 <blockquote>
 <div><dl class="field-list simple">
 <dt class="field-odd">color_sensor</dt>
@@ -204,7 +204,7 @@ You have to use negative PID values if you are line following on the left side o
 <dd class="field-even"><p>speed for line following. Use a negative value to go backwards</p>
 </dd>
 <dt class="field-odd">distance</dt>
-<dd class="field-odd"><p>distance to line follow for in rotations. Use a negative value to go backwards</p>
+<dd class="field-odd"><p>distance to line follow for in centimeters. Use a negative value to go backwards</p>
 </dd>
 <dt class="field-even">rli</dt>
 <dd class="field-even"><p>the rli that you would like for the robot to try to stay on. Go to <a class="reference external" href="https://docs.google.com/document/d/1oJ3-Bsqdp4RnKgrdCS8U93gZ9PlmqChw0xg6aUa2zJY/edit?usp=sharing">https://docs.google.com/document/d/1oJ3-Bsqdp4RnKgrdCS8U93gZ9PlmqChw0xg6aUa2zJY/edit?usp=sharing<svg aria-hidden="true" class="external-link-icon" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg></a> to learn more</p>
@@ -237,7 +237,7 @@ You have to use negative PID values if you are line following on the left side o
 <dd class="field-odd"><p>speed for line following</p>
 </dd>
 <dt class="field-even">distance</dt>
-<dd class="field-even"><p>distance to line follow for in rotations</p>
+<dd class="field-even"><p>distance to line follow for in centimeters</p>
 </dd>
 <dt class="field-odd">kp</dt>
 <dd class="field-odd"><p>sharpness of corrections in the line follower</p>
@@ -258,18 +258,16 @@ You have to use negative PID values if you are line following on the left side o
 <span class="code-lang">python</span>
 <button aria-label="Copy this code" class="copy tooltipped tooltipped-nw"><svg aria-hidden="true" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/xvg"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg></button>
 </div>
-<pre><code><span class="n">gyro_straight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">kp</span><span class="p">,</span> <span class="n">ki</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">kd</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<pre><code><span class="n">gyro_straight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">kp</span><span class="p">,</span> <span class="n">ki</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">kd</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
-<p>Allows you to drive in a straight line using a gyro sensor. You have to use negative PID values if going backwards.
-You should also reset your gyro sensor with the command robot.gyro_sensor.reset() unless you want to follow a previous
-reset.</p>
+<p>Allows you to drive in a straight line using a gyro sensor. You have to use negative PID values if going backwards.</p>
 <blockquote>
 <div><dl class="field-list simple">
 <dt class="field-odd">speed</dt>
 <dd class="field-odd"><p>speed for driving. Use a negative value to go backwards</p>
 </dd>
 <dt class="field-even">distance</dt>
-<dd class="field-even"><p>distance to drive for in rotations. Use a negative value to go backwards</p>
+<dd class="field-even"><p>distance to drive for in centimeters. Use a negative value to go backwards</p>
 </dd>
 <dt class="field-odd">kp</dt>
 <dd class="field-odd"><p>sharpness of corrections in your driving</p>
@@ -281,7 +279,7 @@ reset.</p>
 <dd class="field-odd"><p>keeps your turning from continuing to swing back and forth</p>
 </dd>
 <dt class="field-even">angle</dt>
-<dd class="field-even"><p>the gyro sensor angle that you want to follow the line at</p>
+<dd class="field-even"><p>the gyro sensor angle that you want to follow the line at. Auto set to your current angle so it will drive in a straight line</p>
 </dd>
 </dl>
 </div></blockquote>
@@ -295,12 +293,11 @@ reset.</p>
 </div>
 <pre><code><span class="n">gyro_turn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">left_speed</span><span class="p">,</span> <span class="n">right_speed</span><span class="p">,</span> <span class="n">buffer</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </code></pre></div>
-<p>Allows you to turn a specific angle using the gyro sensor. You should reset your gyro sensor with the command
-robot.gyro_sensor.reset() unless you want to turn using a previous reset</p>
+<p>Allows you to turn a specific angle using the gyro sensor.</p>
 <blockquote>
 <div><dl class="field-list simple">
 <dt class="field-odd">angle</dt>
-<dd class="field-odd"><p>gyro angle to turn to. Use a negative value if turning counter-clockwise</p>
+<dd class="field-odd"><p>gyro angle to turn. Use a negative value if turning counter-clockwise</p>
 </dd>
 <dt class="field-even">left_speed</dt>
 <dd class="field-even"><p>the speed that the left wheel should drive at during the turn</p>
